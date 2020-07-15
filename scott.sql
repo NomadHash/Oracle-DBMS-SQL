@@ -76,21 +76,43 @@ SELECT STUDENT_NAME
  ORDER BY SAL DESC,EMPNO;
  -- // SAL값으로 내림차  정렬 후 EMPNO값으로 재정렬.
  
+ -- 그룹 함수
  
+/* 1. INITCAP function
+    SELECT문의 칼럼에 적용할 수 있으며, 출력시 해당 칼럼의 데이터값의 
+    맨 앞 문자열을 대문자로 변환해준다.
+ */
+ SELECT DEPTNO, INITCAP(DNAME), INITCAP(LOC)
+ FROM DEPT;
+ --------------------------------------------------------------
+ 
+ /* 2. LOWER or UPPER function
+    해당 문자열 전체를 소문자, 대문자로 변환한다.
+ */
+ SELECT EMPNO, ENAME 이름, LOWER(JOB) 직업
+ FROM EMP
+ WHERE LOWER(ENAME) = 'scott';
+ 
+  SELECT EMPNO, ENAME 이름, LOWER(JOB) 직업
+ FROM EMP
+ WHERE ENAME = UPPER('scott');
+ --------------------------------------------------------------
+ 
+ /* 3.CONCAT function
+    두개의 문자열 데이터를 합쳐서 하나의 문자열을 반환. 
+    SELECT 단에서 사용할 수 있다.*/
+    SELECT EMPNO, ENAME, JOB, CONCAT(ENAME, JOB) 
+    FROM EMP
+    WHERE EMPNO = 7369;
+--------------------------------------------------------------
 
-
- 
- 
- 
- 
-
-
-
- 
- 
- 
- 
- 
- 
- 
-
+/* 4. LPAD function LPAD(coulum, n, 'string')
+   데이터 값 왼쪽에 문자열을 추가해준다. 인자는 (컬럼, 크기, 문자열)*/
+   
+   SELECT ENAME, LPAD(ENAME,10,'*'),SAL
+   FROM EMP
+   WHERE DEPTNO = 10;
+   
+   
+   
+   
