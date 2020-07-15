@@ -76,7 +76,9 @@ SELECT STUDENT_NAME
  ORDER BY SAL DESC,EMPNO;
  -- // SAL값으로 내림차  정렬 후 EMPNO값으로 재정렬.
  
- -- 그룹 함수
+ 
+ 
+ --***그룹 함수******************************************
  
 /* 1. INITCAP function
     SELECT문의 칼럼에 적용할 수 있으며, 출력시 해당 칼럼의 데이터값의 
@@ -106,13 +108,29 @@ SELECT STUDENT_NAME
     WHERE EMPNO = 7369;
 --------------------------------------------------------------
 
-/* 4. LPAD function LPAD(coulum, n, 'string')
+/* 4. LPAD function // LPAD(coulum, n, 'string')
    데이터 값 왼쪽에 문자열을 추가해준다. 인자는 (컬럼, 크기, 문자열)*/
    
    SELECT ENAME, LPAD(ENAME,10,'*'),SAL
    FROM EMP
    WHERE DEPTNO = 10;
    
+/* 5. SUBSTR function // SUBSTR(coulum, m,n)
+   */
+   SELECT ENAME, SUBSTR(ENAME,1,3) HIREDATE
+   FROM EMP;
+   ------------------------
+   -- ex2)
+   SELECT SUBSTR(HIREDATE,1,2) 입사년도
+   FROM EMP;
    
    
-   
+/* 6. LENGTH function // 문자열의 길이를 숫자값으로 RETURN*/
+    SELECT EMPNO, ENAME, LENGTH(ENAME), SAL, LENGTH(SAL)
+    FROM EMP
+    WHERE DEPTNO = 20
+    ORDER BY LENGTH(ENAME) ASC; -- RETURN 후 오름차순 정렬
+    
+/* 7. CEIL function // 숫자 함수  
+    
+    
