@@ -58,6 +58,29 @@ SELECT STUDENT_NAME
  AND SAL <= 3000;
  
  
+ /* ORDER문 
+    WHERE문 아래에 위치하며, 검색이 종료된 출력값을 오름차,내림차 순으로 정렬한다.
+    컬럼의 뒤에 'ASC','DESC' 속성값을 통해 내림차, 오름차 순으로 정렬할수있다.*/
+    
+ SELECT EMPNO 사원번호, ENAME 이름, HIREDATE 입사일, SAL 급여 
+ FROM EMP
+ ORDER BY SAL DESC; -- OR ORDER BY SAL ASC; (내림차순)
+ 
+ 
+ SELECT ENAME 이름, SAL *12 급여
+ FROM EMP
+ ORDER BY 급여 DESC;
+-- // 컬럼에 alias 지정시 ORDER의 타겟으로 alias값을 지정해줄 수 있다.
+
+ SELECT ENAME, SAL * 12 ANNUAL, EMPNO FROM EMP
+ ORDER BY SAL DESC,EMPNO;
+ -- // SAL값으로 내림차  정렬 후 EMPNO값으로 재정렬.
+ 
+ 
+
+
+ 
+ 
  
  
 
