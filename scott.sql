@@ -166,8 +166,82 @@ TRIM(LEADING | TRAILING | BOTH + 문자열 + FROM 컬럼)*/
     FROM EMP
     WHERE EMPNO = 7844;
     
+    --ex2) // 인자값이 없을시 문자열을 제외한 나머지 공백을 제거함.
+    SELECT LTRIM('     MILER     '), LENGTH(LTRIM('     MILER     '))
+    FROM DUAL; --//length = 10
+ 
+    SELECT TRIM('     MILER     '), LENGTH(TRIM('     MILER     '))
+    FROM DUAL; --//length = 5
+    
 ---DUMMY TABLE (API) -------------------------
     
     SELECT SYSDATE FROM DUAL; --시간조회
     SELECT 123*456 FROM DUAL;
+    
+    
+--*** 실습 문제 ********************************************
+
+-- 5. 입학 정원이 20명 이상, 30명 이하인 학과 이름과 계열을 출력하시오.
+
+   --ex1) Between and 문
+   SELECT DEPARTMENT_NAME 학과, CATEGORY 계열
+   FROM TB_DEPARTMENT
+   WHERE CAPACITY BETWEEN 20 AND 30;
+   
+   --ex2) &&문
+   SELECT DEPARTMENT_NAME 학과, CATEGORY 계열
+   FROM TB_DEPARTMENT
+   WHERE CAPACITY >= 20
+   AND CAPACITY <=30;
+   ---------------------------------------------------------
+   
+   /* 6.총장을 제외하고 모두 소속학과를 가지고있다. 기술대학교 총장의 이름을
+   알아 낼수있는 SQL문장을 작성하시오. */
+   -- WHERE (컬럼) IS NULL; 사용
+   
+   SELECT PROFESSOR_NAME 이름
+   FROM TB_PROFESSOR
+   WHERE DEPARTMENT_NO IS NULL;
+   ---------------------------------------------------------
+   
+   /* 7. 전산상의 착오로 학과가 지정되지않은 학생의 이름을 검색하시오. */
+   
+   
+   /* 8.춘 대학에는 어떤 계열이 있는지 조회하시오.*/
+   -- 중복제거 메서드 'DISTINCT' 사용
+   SELECT DISTINCT CATEGORY AS 계열
+   FROM TB_DEPARTMENT;
+   
+   
+   
+   -- Math function -----------------------------------------
+   
+   /* 1. CEIL function (올림 값)
+    stntax // CEIL(column1) */
+   SELECT CEIL(10.1)
+   FROM DUAL; --// 11
+   
+    /* 2. FLOOR function (내림 값)
+    stntax // FLOOR(column1) */
+   SELECT FLOOR(10.7)
+   FROM DUAL; --// 11
+   
+    /* 3. MOD function (% 와 동일)
+    stntax // MOD(column1) */
+   SELECT MOD(3,2)
+   FROM DUAL; --// 1
+   
+   
+   
+   
+   
+   
+  
+   
+   
+   
+   
+   
+   
+   
     
