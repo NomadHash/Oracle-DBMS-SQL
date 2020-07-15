@@ -124,6 +124,19 @@ SELECT STUDENT_NAME
    SELECT SUBSTR(HIREDATE,1,2) 입사년도
    FROM EMP;
    
+   --ex3) 
+   SELECT (SUBSTR('970903-1111111',1,2)) 
+   FROM DUAL; --//return '97'
+   
+   --ex4)
+   SELECT (SUBSTR('970903-1111111',8)) 
+   FROM DUAL; --//return '1111111'
+   
+   --ex5)
+   SELECT SUBSTR('970903-1111111',1,7) || '*******'
+   FROM DUAL; --//return 970903-*******
+   
+   ------------------------------------------------------
    
 /* 6. LENGTH function // 문자열의 길이를 숫자값으로 RETURN*/
     SELECT EMPNO, ENAME, LENGTH(ENAME), SAL, LENGTH(SAL)
@@ -131,6 +144,30 @@ SELECT STUDENT_NAME
     WHERE DEPTNO = 20
     ORDER BY LENGTH(ENAME) ASC; -- RETURN 후 오름차순 정렬
     
-/* 7. CEIL function // 숫자 함수  
+/* 7. REPLACE function // 특정 문자열 변경 
+     REPLACE(문자열, 바꿀 문자열, 바뀔 문자열)*/
+
+     SELECT REPLACE('970903-1111111',SUBSTR('970903-1111111',9)
+     ,'******')
+     FROM DUAL;
+---------------------------------------------------------------
+/* 8. LTRIM function // LTRIM(컬럼, 문자열) */
+
+    SELECT ENAME, JOB, LTRIM(JOB,'A'), SAL, LTRIM(SAL, 1)
+       FROM EMP; 
+
+
+/* 9. TRIM function //앞 뒤 문자열 혹은 공백 제거 
+TRIM(LEADING | TRAILING | BOTH + 문자열 + FROM 컬럼)*/
+
+    SELECT EMPNO, JOB, 
+    TRIM(LEADING 'S' FROM JOB) AS LEADING,
+    TRIM(TRAILING 'N' FROM JOB) AS TRAILING
+    FROM EMP
+    WHERE EMPNO = 7844;
     
+---DUMMY TABLE (API) -------------------------
+    
+    SELECT SYSDATE FROM DUAL; --시간조회
+    SELECT 123*456 FROM DUAL;
     
