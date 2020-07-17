@@ -806,6 +806,120 @@ ORDER BY 등급;
        FROM EMP A, DEPT D
        WHERE A.DEPTNO = D.DEPTNO
        AND TO_CHAR(HIREDATE,'YYYY') <= 1982;
+       
+       
+       --*** WORK SHOP ***********************************
+       SELECT CATEGORY 학과이름, CAPACITY 현재정원,
+       CASE WHEN CAPACITY >=40   THEN '대 강의실'
+            WHEN CAPACITY >=30 THEN '중 강의실' 
+            ELSE '소 강의실' 
+       END 강의실크기
+       FROM TB_DEPARTMENT
+       WHERE CATEGORY = '예체능'
+       ORDER BY 강의실크기, CAPACITY;
+       
+       
+       /*현재 법학과 교수 중 가장 나이가 많은 사람부터 이름을 학인하자.
+       (법학과의 학과코드는 학과 테이블에서 조회하여 찾아냄
+       단 조인 사용*/
+       SELECT P.PROFESSOR_NAME, P.PROFESSOR_SSN
+       FROM TB_PROFESSOR P, TB_DEPARTMENT D
+       WHERE P.DEPARTMENT_NO = D.DEPARTMENT_NO
+       AND D.DEPARTMENT_NAME = '법학과'
+       ORDER BY PROFESSOR_SSN DESC;
+       
+      --******************************************************
+       
+       /*서브쿼리 
+       SELECT에 포함되어 있는 또 하나의 별도 SELECT.
+       여러번의 SELECT문을 수행 해야 얻을 수 있는 결과를 하나의 중첩된 
+       SELECT문으로 쉽게 얻을 수 있도록 해준다.*/
+       
+       --ex) 1
+       SELECT ENAME
+       FROM EMP
+       WHERE SAL > (SELECT SAL
+                    FROM EMP
+                    WHERE ENAME = 'SCOTT');
+                    
+       --ex) 2             
+      SELECT ENAME 
+      FROM EMP
+      WHERE DEPTNO = (SELECT DEPTNO
+                      FROM EMP
+                      WHERE ENAME = 'SCOTT');
+                      
+     --sal의 평균보다 월급이 더 높은사람들의 이름 리스트
+     
+     SELECT ENAME
+     FROM EMP
+     WHERE SAL > (SELECT AVG(SAL)
+                      FROM EMP
+                     );
+    
+     /*EMP 테이블에서 사원번호가 7521의 업무와 같고 급여가 사원번호 7934보다
+     많은 사원의 사원번호, 이름, 담당 업무, 입사일자, 급여 출력*/
+     
+     SELECT EMPNO, ENAME, JOB, HIREDATE, SAL
+     FROM EMP
+     WHERE JOB = (SELECT JOB
+                  FROM EMP 
+                   WHERE EMPNO = 7521)
+     AND 
+           SAL > (SELECT SAL
+                  FROM EMP
+                  WHERE EMPNO = 7934);
+                  
+                  
+    --EMP 테이블에서 급여의 평균보다 적은 사원의 사원번호, 업무, 급여, 부서번호 출력
+    SELECT EMPNO, JOB, SAL ,DEPTNO
+    FROM EMP
+    WHERE SAL < (SELECT AVG(SAL)
+                  FROM EMP);
+                  
+                  
+    --SCOTT의 직업과 같은 직업인 사람 리스트
+    SELECT * 
+    FROM EMP 
+    WHERE JOB = (SELECT JOB
+                FROM EMP
+                WHERE ENAME = 'SCOTT');
+                
+    /*사원 테이블에서 BLAKE 보다 급여가 많은 사원들의 사번, 이름, 급여를 검색*/
+    SELECT EMPNO, ENAME, SAL 
+    FROM EMP
+    WHERE SAL > (SELECT SAL
+                 FROM EMP
+                 WHERE ENAME = 'BLAKE');
+                 
+    /*사원 테이블에서 MILLER 보다 늦게 입사한 사원의 사번, 이름, 입사일*/
+    SELECT EMPNO, ENAME, HIREDATE
+    FROM EMP
+    WHERE HIREDATE > (SELECT HIREDATE
+                      FROM EMP
+                      WHERE ENAME = 'MILER');
+    
+    SELECT EMPNO,ENAME,JOB,HIREDATE,SAL,DEPTNO
+    FROM EMP
+    WHERE SAL IN(SELECT MIN(SAL)
+                 FROM EMP
+                 GROUP BY JOB);
+                 
+   /* ALL // 조건으로 비교한 서브쿼리 값이 복수일때 복수 조건 모두를 고려하여
+      비교할수있다.
+   */
+    SELECT EMPNO, ENAME, JOB
+    FROM EMP 
+    WHERE SAL < ALL (SELECT SAL 
+    FROM EMP
+    WHERE JOB = 'MANAGER');
+    
+                    
+                    
+     
+                    
+       
+
 
 
        
