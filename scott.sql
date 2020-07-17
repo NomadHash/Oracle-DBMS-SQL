@@ -932,6 +932,13 @@ ORDER BY 등급;
                 FROM EMP E JOIN SALGRADE S
                 ON E.SAL BETWEEN S.LOSAL AND S.HISAL  
                 WHERE S.GRADE = 2); 
+                
+                
+  /* 커밋 (완료후 삽입) 롤백(추가하기전으로 ) 그룹 함수 충돌, SUBSTR사용, 형변환 (NUM,STR,DATE),
+   중복문 제거, SELECT안에 BETWEEN 사용하여 자료검색, JOIN,
+   문자함수 중 LOWER 나 UPPER ,첫글자만 바꿔주는 INITCAP
+   
+  */ 
   
 
                 
