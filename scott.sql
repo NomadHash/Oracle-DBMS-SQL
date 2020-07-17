@@ -914,7 +914,28 @@ ORDER BY 등급;
     FROM EMP
     WHERE JOB = 'MANAGER');
     
-                    
+    
+    
+    
+  --4. 사원 테이블에서 부서별 최대 급여를 받는 사원들의 사번, 이름, 부서코드, 급여를 검색
+  
+  SELECT EMPNO 사번, ENAME 이름, DEPTNO 부서코드, SAL 급여
+  FROM EMP
+  WHERE SAL IN(SELECT MAX(SAL)
+                FROM EMP
+                GROUP BY DEPTNO);
+                
+ --5.SALGRADE가 2등급인 사원들의 평균 급여보다 적게 받는 사원 정보를 검색하시오
+  SELECT *
+  FROM EMP 
+  WHERE SAL <= (SELECT AVG(SAL)
+                FROM EMP E JOIN SALGRADE S
+                ON E.SAL BETWEEN S.LOSAL AND S.HISAL  
+                WHERE S.GRADE = 2); 
+  
+
+                
+                
                     
      
                     
