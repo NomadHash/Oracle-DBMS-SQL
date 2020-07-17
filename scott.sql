@@ -760,12 +760,59 @@ ORDER BY 등급;
             WHERE E.MGR = B.EMPNO
             AND B.MGR = F.EMPNO;
             
-       /*8. 7번 결과에서 상위 관리자가 없는 모든 사원의 이름도 사원명에 출력되도록 
-       수정하시오.
+
+       
+       --10. 커미션을 받는 사원의 이름, 커미션, 부서이름을 출력하시오.
+       SELECT E.ENAME, E.COMM,D.DNAME
+       FROM EMP E, DEPT D
+       WHERE E.DEPTNO = D.DEPTNO
+       AND COMM IS NOT NULL AND COMM NOT LIKE 0;
+       
+      --11. 이름에 'A'가 들어가는 사원들의 이름과 부서명 출력하기
+      
+       SELECT E.ENAME,D.DNAME
+       FROM EMP E, DEPT D
+       WHERE E.DEPTNO = D.DEPTNO
+       AND E.ENAME LIKE '%A%';
+       
+       /*12. DALLAS에 근무하는 사원 중 급여 1500이상인 사원의 이름, 급여
+       입사일 보너스를 출력하시오*/
+       
+       SELECT E.ENAME,E.SAL, E.HIREDATE, E.COMM
+       FROM EMP E, DEPT D
+       WHERE E.DEPTNO = D.DEPTNO
+       AND D.LOC = 'DALLAS';
+       
+       /*13. 자신의 관리자보다 연봉을 많이 받는 사원의 이름과 연봉을 출력하시오
+       */
+        SELECT A.ENAME, B.SAL *12 연봉
+       FROM EMP A, EMP B
+       WHERE A.MGR = B.EMPNO
+       AND A.SAL > B.SAL;
+       
+       
+       /*14.직원 중 현재시간 기준으로 근무 개월 수가 30년(12*30개월)
+       보다 많은 사람의 이름, 급여, 입사일, 부서명을 출력하시오*/
+       
+       SELECT A.ENAME, A.SAL, A.HIREDATE, D.DNAME
+       FROM EMP A, DEPT D
+       WHERE MONTHS_BETWEEN(SYSDATE,HIREDATE) >30
+       AND A.DEPTNO = D.DEPTNO;
+       
+       
+       /*15. 각 부서별로 1982년 이전에 입사한 직원들의 인원수를 구하시오
+       */
+       SELECT COUNT(A.ENAME)
+       FROM EMP A, DEPT D
+       WHERE A.DEPTNO = D.DEPTNO
+       AND TO_CHAR(HIREDATE,'YYYY') <= 1982;
+
+
        
       
-      
        
+       
+    
        
        
        
