@@ -1247,94 +1247,128 @@ ORDER BY 등급;
      DELETE FROM EMP; -- emp 전체 데이터 삭제     
      ROLLBACK; -- 복구
      
+     /* COMMIT
+     모든 데이터 변경사항을 데이터 베이스에 영구 반영시키는 명령어
+     모든 사용자들은 트랜잭션 종료 후의 결과를 확인 할 수 있다.
+     */
      
-      
-      
-      
-      
-      
- 
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-   
-             
-             
-             
+     
+     SELECT * FROM DEPT;
+     
+     
+     /* DLL (Data Definition Language)
+        데이터 베이스 구조를 생성, 수정, 삭제하는데 사용하는 SQL문 */
         
+        -- 1. 테이블 생성
+        
+        /*CREATE TABLE TABLE명
+                     (COLUMN명 DATATYPE)*/
+                     
+        CREATE TABLE DEPT_2
+        ( DEPTNO NUMBER(2), DNAME VARCHAR2(10), LOC VARCHAR2(10)); 
+        
+         CREATE TABLE DEPT_3
+        ( DEPTNO NUMBER(2), DNAME VARCHAR2(10), LOC VARCHAR2(10)); 
+        
+        DESC DEPT_2;
+        
+        
+        /*스키마 
+          특정 사용자가 데이터베이스에 접근하여 생성한 객체들의 대표이름
+          생성한 객체의 소유는 생성한계정이 갖는다.*/
+          /*
+       VARCHAR2(SIZE)
+       CHAR(SIZE)*/
+       
+       CREATE TABLE DEF_TABLE
+       (NUM NUMBER(2),
+         WRITEDAY DATE);
+         
+         DESC DEF_TABLE;
+         
+         INSERT INTO DEF_TABLE(NUM)
+         VALUES(1);
+         
+         SELECT * FROM DEF_TABLE;
+         
+         CREATE TABLE DEF_TABLE2
+         (NUM NUMBER(2), WRITE DATE DEFAULT SYSDATE); --NULL 방지용 DEFAULT 추가.
+         
+         SELECT * FROM DEF_TABLE2;
+         
+         INSERT INTO DEF_TABLE2 (NUM)
+         VALUES (1);
+         
+        --** 제약 조건------------------------------------
+        
+        -- NOT NULL (NN) // 이 컬럼은 NULL 값을 포함하지않는다
+        -- UNIQUE (UQ) // 중복되자않는 값만이 들어갈수있고 NULL 허용 (중복값 삽입 불가) 예)부서 번호
+        -- PRIMARY KEY // 중복불가, NULL불가 
+        -- CHECK // 참이어야하는 조건
+        -- FOREIGN KEY // 
+         
+         DESC  EMP;
+         
+         INSERT INTO DEPT(DEPTNO,DNAME,LOC)
+         VALUES (NULL,'AAA','서울');
+         
+         DELETE FROM DEPT
+         WHERE DEPTNO = 90;
+         
+         
+         INSERT INTO PK_TAB1(ID,NAME)
+         VALUES('02','null');
+         
+         
+          INSERT INTO PK_TAB1(ID,NAME)
+         VALUES(null,'a');
+         
+         CREATE TABLE UNI_TAB1 (
+         DEPTNO NUMBER(2) CONSTRAINT UNI_TAB1_DEPTNO_UK UNIQUE,
+         DNAME CHAR(14),
+         LOC CHAR(13));
+         )
+         
+         INSERT INTO UNI_TAB1 (DEPTNO,DNAME,LOC)
+         VALUES(NULL,'A','A');
+         
+         
+       CREATE TABLE SAWON_2(
+       S_NO NUMBER(2),
+       S_NAME VARCHAR(10) NOT NULL,
+       S_EMAIL VARCHAR(20) CONSTRAINT SAWONS_S_EMAIL_UK UNIQUE);
+       
+       DESC SAWON_2;
+       /*
+       이름      널?       유형           
+       ------- -------- ------------ 
+       S_NO             NUMBER(2)    
+       S_NAME  NOT NULL VARCHAR2(10) 
+       S_EMAIL          VARCHAR2(20) 
+       */
+       
+       INSERT INTO SAWON_2(S_NO,S_NAME,S_EMAIL)
+       VALUES(10,'박준형',NULL);
        
        
+       CREATE TABLE SAWON_4 (
+       S_NO NUMBER(2),
+       S_NAME VARCHAR(10),
+       S_EMAIL VARCHAR(20),
+       CONSTRAINT SAWON_4_UK UNIQUE(S_NAME,S_EMAIL));
        
-       
-       
-     
-     
-   
-   
-   
-   
-  
-  
-  
-                
-                    
-     
-                    
-       
+       SELECT * FROM SAWON_4;
 
-
-
+       INSERT INTO SAWON_4
+       VALUES (1,'박준형','badsoap141@gmail.com');
        
-      
+        INSERT INTO SAWON_4
+       VALUES (2,'김태혁','badsoap141@gmail.com');
        
+       UPDATE SAWON_4
+       SET S_EMAIL = 'DQUIN@GMAIL.COM'
+       WHERE S_NAME = '김태혁';
        
-    
-       
-       
-       
-       
-       
-       
-       
-    
-       
-       
-      
-      
-     
-     
+         INSERT INTO SAWON_4
+       VALUES (3,'신재준',null);
    
-   
-
-   
-
-
-
-  
-  
-  
-   
-   
-   
-   
-   
-   
-   
-
-   
-  
-   
-   
-   
-   
-   
-   
-   
-    
