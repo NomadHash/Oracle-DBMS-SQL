@@ -935,13 +935,354 @@ ORDER BY 등급;
                 
                 
   /* 커밋 (완료후 삽입) 롤백(추가하기전으로 ) 그룹 함수 충돌, SUBSTR사용, 형변환 (NUM,STR,DATE),
-   중복문 제거, SELECT안에 BETWEEN 사용하여 자료검색, JOIN, null까지 결과값 뽑아내기 
+   중복문 제거(DISTINCT), SELECT안에 BETWEEN 사용하여 자료검색, JOIN, null까지 결과값 뽑아내기 
    문자함수 중 LOWER 나 UPPER ,첫글자만 바꿔주는 INITCAP
    
-  */ 
+  */ -- 다중 선택 (CREATE)
   
+  CREATE TABLE COPY_EMP --COPY_EMP 가상 테이블 생성
+  AS
+  SELECT EMPNO,ENAME FROM EMP --EMP테이블의 EMPNO, ENAME 컬럼만을 선택
+  WHERE 1=2;
+  ---------------------------------------------------------------------
 
-                
+  INSERT INTO COPY_EMP(EMPNO, ENAME) --상단에서 생성한 COPY_EMP테이블에 EMPNO,ENAME삽입
+  SELECT EMPNO, ENAME FROM EMP;  -- EMP에서 EMPNO ENAME을 선택  
+  
+  SELECT * FROM COPY_EMP;
+   
+   /*EMPNO ENAME     
+---------- ----------
+      7369 SMITH     
+      7499 ALLEN     
+      7521 WARD      
+      7566 JONES     .....*/
+  
+  
+  -- INSERT
+  
+  DESC DEPT;
+  
+  INSERT INTO DEPT(DEPTNO,DNAME,LOC)
+  VALUES(90,'인사과','서울');
+  
+  INSERT INTO DEPT(LOC, DNAME, DEPTNO)
+  VALUES('서울','인사과',70);
+  
+  
+  INSERT INTO DEPT
+  VALUES(80,'인사과','서울');
+  
+  SELECT *FROM DEPT;
+  
+  
+  /*묵시적 방법 INTO절에서 컬럼명과 값을 생략하면 된다.
+  단, 해당 컬럼에 NOT NULL 제약 조건이 지정된 경우엔 생략 불가*/
+  INSERT INTO DEPT(DEPTNO, DNAME)
+  VALUES (91,'인사과');
+  
+  
+  /*명시적 방법
+  VALUES절의 컬럼값에 NULL키워드를 적거나 빈 문자열 '' 을 사용하면 된다.*/
+  
+  INSERT INTO DEPT
+  VALUES (92, '인사과', NULL);
+
+  INSERT INTO EMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+  VALUES(9000,USER,'연구원',7839,SYSDATE,5000,NULL,90);
+  
+  --특정 데이터 타입으로 입력 (TO_DATE)
+  
+    INSERT INTO EMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+  VALUES(9001,USER,'홍길동',7839,'20/01/01',3000,NULL,90);
+  
+  INSERT INTO EMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+  VALUES(9002,USER,'박준형',7844,TO_DATE('1999-12-13','YYYY/MM/DD'),3000,NULL,90);
+  
+  
+  
+  CREATE TABLE SAL_HISTORY
+  AS
+  SELECT EMPNO, HIREDATE, SAL
+  FROM EMP
+  WHERE 1=2;
+  
+  CREATE TABLE MGR_HISTORY
+  AS
+  SELECT EMPNO, MGR, SAL
+  FROM EMP
+  WHERE 1=2; --데이터를 제외하고 컬럼만을 복사하기위해 성립되지않는 조건 삽입. (1=2 성립값은 존재X)
+  
+  INSERT ALL --다중 복사 붙여넣기
+  INTO SAL_HISTORY VALUES(EMPNO,HIREDATE,SAL)
+  INTO MGR_HISTORY VALUES(EMPNO,MGR,SAL)
+  SELECT EMPNO, HIREDATE, SAL, MGR
+  FROM EMP;
+  
+  SELECT * FROM SAL_HISTORY;
+  SELECT * FROM MGR_HISTORY;
+  
+  -- 테이블 삭제 (DROP)
+  DROP TABLE SAL_HISTORY;
+  DROP TABLE MGR_HISTORY;
+  
+  -- 테이블 생성 (CREATE)
+  CREATE TABLE SAL_HISTORY -- 테이블 생성
+  AS SELECT EMPNO, HIREDATE, SAL --컬럼 생성
+  FROM EMP WHERE 1=2; --EMP 테이블에서 성립되지않는 조건문 삽입
+  
+    CREATE TABLE MGR_HISTORY -- 테이블 생성
+  AS SELECT EMPNO, HIREDATE, SAL --컬럼 생성
+  FROM EMP WHERE 1=2;
+  
+  SELECT * FROM SAL_HISTORY;
+  
+  
+  INSERT ALL
+    WHEN SAL <2400 THEN
+    INTO SAL_HISTORY VALUES(EMPNO,HIREDATE,SAL)
+    WHEN SAL >2500 THEN 
+    INTO MGR_HISTORY VALUES(EMPNO,HIREDATE,SAL)
+    SELECT EMPNO, HIREDATE, SAL,MGR
+    FROM EMP;
+    
+    SELECT *FROM SAL_HISTORY;
+    SELECT *FROM MGR_HISTORY;
+    
+    DROP TABLE SAL_HISTORY;
+    DROP TABLE MGR_HISTORY;
+    
+    CREATE TABLE TEST_HISTORY
+    AS
+    SELECT EMPNO, SAL
+    FROM EMP
+    WHERE 1=2;
+    
+    CREATE TABLE SAL_HISTORY
+    AS
+    SELECT EMPNO,HIREDATE,SAL
+    FROM EMP
+    WHERE 1=2;
+    
+    CREATE TABLE MGR_HISTORY
+    AS
+    SELECT EMPNO,MGR, SAL
+    FROM EMP 
+    WHERE 1=2;
+    
+    --ex1)
+      /*다중,조건 삽입
+  */
+    INSERT FIRST
+      WHEN SAL = 800 THEN
+           INTO SAL_HISTORY 
+             VALUES(EMPNO,HIREDATE,SAL)
+      WHEN SAL <2500 THEN
+           INTO MGR_HISTORY
+             VALUES(EMPNO,MGR,SAL)   
+        ELSE 
+           INTO TEST_HISTORY VALUES(EMPNO,SAL)
+      SELECT EMPNO,HIREDATE,SAL, MGR
+      FROM EMP;
+      --------------------------------------------------------------
+    
+  
+-- UPDATE 문 (UPDATE[TABLE] SET[COLUMN] WHERE [CONDITION])
+   --ex1)
+   UPDATE DEPT
+   SET DNAME = '경리과',LOC ='부산'
+   WHERE DEPTNO = 90;
+   
+   --서브 쿼리를 이용한 UPDATE 문
+   UPDATE EMP
+     SET JOB = (SELECT JOB 
+                FROM EMP 
+                WHERE EMPNO = 7900),
+         SAL = (SELECT SAL
+                FROM EMP
+                WHERE EMPNO = 7844)
+     WHERE EMPNO = 9002;
+   
+   
+   /*DELETE 용도
+     테이블에 저장된 컬럼들을 삭제한다 
+     한번에 여러개의 행을 삭제 할 수있다.*/
+     
+     DELETE FROM DEPT
+     WHERE DEPTNO = 91;
+     
+     DELETE FROM EMP
+     WHERE DEPTNO =  (SELECT DEPTNO
+             FROM DEPT
+             WHERE DNAME = '경리과');
+             
+     SELECT * FROM EMP;
+     
+     
+     
+     
+     /*MERGE 테이블 병합*/
+     
+     --ex1) 사전준비
+     --테이블 생성 
+     CREATE TABLE PT_01
+     (판매번호 VARCHAR2(8),
+      제품번호 NUMBER,
+      수량 NUMBER,
+      금액 NUMBER);
+      
+      CREATE TABLE PT_02
+     (판매번호 VARCHAR2(8),
+      제품번호 NUMBER,
+      수량 NUMBER,
+      금액 NUMBER);
+      
+      CREATE TABLE P_TOTAL
+      (판매번호 VARCHAR(8),
+       제품번호 NUMBER,
+       수량 NUMBER,
+       금액 NUMBER);
+       
+       --PT_01 테이블에 삽입
+       INSERT INTO PT_01 VALUES ('20150101','1000',10,500);
+       INSERT INTO PT_01 VALUES ('20150102','1001',10,400);
+       INSERT INTO PT_01 VALUES ('20150103','1002',10,300);
+        
+       --PT_02 테이블에 삽입
+       INSERT INTO PT_02 VALUES ('20150201','1003',5,500);
+       INSERT INTO PT_02 VALUES ('20150202','1004',5,400);
+       INSERT INTO PT_02 VALUES ('20150203','1005',5,300);
+       COMMIT;
+       
+     -------------------------------------------------------------------  
+       
+       MERGE INTO P_TOTAL TOTAL -- 대상 테이블 설정
+       USING PT_01 P01 -- UPDATE || INSERT될 테이블 설정
+       ON(TOTAL.판매번호 = P01.판매번호) -- 전제 설정
+       WHEN MATCHED THEN-- 해당 컬럼이 있다면 
+         UPDATE SET TOTAL.제품번호 = P01.제품번호 -- UPDATE
+         WHEN NOT MATCHED THEN -- 해당 컬럼이 없다면 
+           INSERT VALUES (P01.판매번호, P01.제품번호,P01.수량, P01.금액); --INSERT
+           
+           MERGE INTO P_TOTAL TOTAL
+       USING PT_02 P02
+       ON(TOTAL.판매번호 = P02.판매번호)
+       WHEN MATCHED THEN 
+         UPDATE SET TOTAL.제품번호 = P02.제품번호 -- 해당 컬럼이 있다면 UPDATE
+         WHEN NOT MATCHED THEN
+           INSERT VALUES (P02.판매번호, P02.제품번호,P02.수량, P02.금액); -- 해당 컬럼이 없다면 INSERT
+       
+       SELECT * FROM P_TOTAL;
+       
+       --조건, DELETE MERGE
+       
+       --ex1)
+       -- 테이블 생성
+       CREATE TABLE EMP_M2
+       AS
+       SELECT EMPNO,JOB,SAL
+       FROM EMP
+       WHERE 1=2;
+       
+       SELECT * FROM EMP_M2;
+       
+       --병합
+       MERGE INTO EMP_M2 M2
+       USING EMP B
+       ON(M2.EMPNO = B.EMPNO)
+       WHEN MATCHED THEN 
+         UPDATE SET 
+           M2.JOB = B.JOB,
+           M2.SAL = B.SAL
+           WHERE B.JOB = 'CLERK'
+         WHEN NOT MATCHED THEN
+           INSERT (M2.EMPNO, M2.JOB, M2.SAL)
+           VALUES (B.EMPNO,B.JOB, B.SAL)
+             WHERE B.JOB = 'CLERK';
+             
+             SELECT * FROM EMP_M2;
+             
+             
+    --실습문제 
+    
+    --1. PT_02 테이블의 제품번호 '1004' 데이터 삭제
+     DELETE FROM PT_02
+     WHERE 제품번호 = 1004;
+     /*         판매번호      제품번호       수량       금액
+                -------- ---------- ---------- ----------
+                20150201       1003          5        500
+                20150203       1005          5        300 */
+     
+     
+     --2. PT_02 테이블의 제품번호 '1005'를 '1006'으로 업데이트 
+      UPDATE PT_02
+      SET 제품번호 = 1006
+      WHERE 제품번호 = 1005;
+      /*  판매번호           제품번호         수량        금액
+          -------- ---------- ---------- ----------
+           20150201          1003            5        500
+           20150203          1006           5         300  */
+           
+      
+      --3. PT_01의 판매번호 '20150103'의 판매번호를 '20150104'로 업데이트
+      UPDATE PT_01
+      SET 판매번호 = '20150104'
+      WHERE 판매번호 = '20150103';
+      
+      --4. PT_02에서 금액이 500인 데이터를 삭제.
+      DELETE FROM PT_02
+      WHERE 금액 = 500;
+      
+      
+      /***트랜잭션(TRANSACTION)************************************************
+      데이터베이스의 논리적인 단위.
+      전부 적용 혹은 전부 취소 (All or Notthing) (완전삭제 || 취소)
+      트랜잭션의 대상이 되는 SQL문은 DML문(INSECT,UPDATE,DELETE,MERGE)이다.
+      데이터의 일관성을 유지하면서 안정적으로 데이터를 복구하기 위함
+      
+      트랜잭션의 종료는 사용자가 'COMMIT' 혹은 'ROLLBACK' 명령으로 명시적 실행
+      */
+      
+      -- ex1)
+     DELETE FROM EMP; -- emp 전체 데이터 삭제     
+     ROLLBACK; -- 복구
+     
+     
+      
+      
+      
+      
+      
+ 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   
+             
+             
+             
+        
+       
+       
+       
+       
+       
+     
+     
+   
+   
+   
+   
+  
+  
+  
                 
                     
      
